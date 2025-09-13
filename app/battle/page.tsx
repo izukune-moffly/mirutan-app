@@ -8,6 +8,16 @@ import { db, auth } from "@/libs/firebase/firebase";
 import { signInAnonymously } from "firebase/auth";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 
+type VideoDoc = {
+  title: string;
+  src: string;
+  thumb: string;
+  opponent?: string;
+  matchDate?: string;
+  contributors?: string[];
+  createdAt?: unknown; // Firestore Timestamp など
+};
+
 type VideoItem = {
   id: string;
   title: string;
@@ -37,9 +47,8 @@ export default function BattlePage() {
   const [loading, setLoading] = useState(true);
   const [active, setActive] = useState<VideoItem | null>(null);
 
-  // 検索関連
+  // 検索
   const [qstr, setQstr] = useState("");
-  const [onlyWithThumb, setOnlyWithThumb] = useState(false); // お好みのフィルタ例（任意）
 
   // 再生中のみジェスチャー有効
   const [isPlaying, setIsPlaying] = useState(false);
@@ -83,7 +92,7 @@ export default function BattlePage() {
         const snap = await getDocs(q);
         setList(
           snap.docs.map((d) => {
-            const v = d.data() as any;
+            const v = d.data() as VideoDoc; // ★ any を使わない
             return {
               id: d.id,
               title: v.title ?? "",
@@ -181,15 +190,11 @@ export default function BattlePage() {
     opacity: 1 - 0.4 * progress,
   };
 
-  // -------------------------------
-  // 検索ロジック（クライアント側フィルタ）
-  // -------------------------------
+  // 検索（クライアント側フィルタ）
   const filtered = useMemo(() => {
     const qn = norm(qstr);
     return list.filter((v) => {
-      if (onlyWithThumb && !v.thumb) return false;
       if (!qn) return true;
-
       const fields = [
         v.title,
         v.opponent,
@@ -198,10 +203,9 @@ export default function BattlePage() {
       ]
         .filter(Boolean)
         .map((s) => norm(String(s)));
-
       return fields.some((f) => f.includes(qn));
     });
-  }, [list, qstr, onlyWithThumb]);
+  }, [list, qstr]);
 
   return (
     <div className={styles.page}>
@@ -214,6 +218,7 @@ export default function BattlePage() {
             onChange={(e) => setQstr(e.target.value)}
             className={styles.searchInput}
             placeholder="タイトル・対戦相手・貢献者・日付 で検索"
+            aria-label="動画検索"
           />
           {qstr && (
             <button className={styles.searchClear} onClick={() => setQstr("")}>
