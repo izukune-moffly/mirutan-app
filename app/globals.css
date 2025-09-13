@@ -1,42 +1,60 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
+.bg-gray-100 {
+  background-color: #dddddd;
   margin: 0;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+.phone-size-wrapper {
+  max-width: 720px;
+  width: 100%;
+  height: auto;
+  background-color: #fff;
+
+  margin: 0 auto;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+.header-logo {
+  width: 80%;
+  height: auto;
+  display: block;
+  margin: 36px auto;
+}
+
+.tab-container {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto 24px;
+  width: 100%;
+  border-bottom: 2px solid #f8c6d8; /* 下線でタブっぽく */
+}
+
+.tab-button {
+  flex: 1;
+  padding: 12px 0;
+  background: #fdd6e4;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  color: #a94465;
+  transition: background 0.3s;
+  text-decoration: none;
+  text-align: center;
+}
+
+.tab-button:hover {
+  background: #fbbbd3;
+}
+
+.tab-button.active {
+  background: #f78fb3;
+  color: #fff;
+  border-bottom: 3px solid #e84393;
+}
+
+.tab-content {
+  padding: 16px;
+  font-size: 14px;
+  text-align: center;
 }
